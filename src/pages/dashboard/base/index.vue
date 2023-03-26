@@ -19,21 +19,7 @@
         无
       </t-card>
     </t-col>
-    <t-col v-if="false" :span="6">
-      <t-card class="card-normal" :title="'捐赠'" :bordered="false" :hover-shadow="true">
-        <t-row>
-          <t-col :span="6">
-            <t-image :src="donate1" :style="{ width: '160px', height: '160px' }" fit="cover" shape="round" />
-          </t-col>
-          <t-col :span="6">
-            <t-image :src="donate2" :style="{ width: '160px', height: '160px' }" fit="cover" shape="round" />
-          </t-col>
-        </t-row>
-      </t-card>
-    </t-col>
-    <t-col v-if="false" :span="6">
-      <t-card class="card-normal" :bordered="false" :hover-shadow="true"> 123 </t-card>
-    </t-col>
+
   </t-row>
 </template>
 
@@ -48,8 +34,6 @@ import { onMounted, ref } from 'vue';
 import { request } from '@/utils/request';
 import { MessagePlugin } from 'tdesign-vue-next';
 import router from '@/router';
-import donate1 from '../../../assets/donate/img.png';
-import donate2 from '../../../assets/donate/img_1.png';
 import { useRoute } from 'vue-router';
 
 const announcement = ref([]);

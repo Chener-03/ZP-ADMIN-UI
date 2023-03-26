@@ -5,7 +5,6 @@ import { WsMessageConstVar } from '@/utils/ws/entity/WsMessageConstVar';
 import { TOKEN_NAME } from '@/config/global';
 
 const ws = new Ws('ws://localhost:5001/v1/user/ws/web/connect');
-// const ws = new Ws('ws://chener.xyz:5001/v1/user/ws/web/connect')
 
 const HEARTBERT_INTERVAL = 1000 * 50;
 let heartBertThread;
