@@ -1,66 +1,53 @@
 <template>
-  <t-card :bordered="false">
+  <t-card :bordered="false" >
     <t-form
       ref="form"
       :data="searchData"
-      :style="{ marginBottom: '8px', marginTop: '10px' }"
+      :style="{ marginBottom: '8px',marginTop:'10px'}"
       @reset="reset"
       :label-width="0"
-      @submit="getData"
-    >
+      @submit="getData">
       <t-row>
         <t-col :span="10">
           <t-row :gutter="[10]">
             <t-col :sm="2" :span="2">
-              <t-input
-                v-model="searchData.sId"
-                class="form-item-content"
-                placeholder="服务名"
-                :style="{ maxWidth: '160px' }"
-                type="search"
-                clearable
-              >
+              <t-input v-model="searchData.sId"
+                       class="form-item-content"
+                       placeholder="服务名"
+                       :style="{ maxWidth: '160px' }"
+                       type="search" clearable>
                 <template #prefix-icon>
                   <SearchIcon />
                 </template>
               </t-input>
             </t-col>
             <t-col :sm="2" :span="2">
-              <t-input
-                v-model="searchData.iId"
-                class="form-item-content"
-                placeholder="服务ID"
-                :style="{ maxWidth: '160px' }"
-                type="search"
-                clearable
-              >
+              <t-input v-model="searchData.iId"
+                       class="form-item-content"
+                       placeholder="服务ID"
+                       :style="{ maxWidth: '160px' }"
+                       type="search" clearable>
                 <template #prefix-icon>
                   <SearchIcon />
                 </template>
               </t-input>
             </t-col>
             <t-col :sm="2" :span="2">
-              <t-input
-                v-model="searchData.tid"
-                class="form-item-content"
-                placeholder="链路ID"
-                :style="{ maxWidth: '160px' }"
-                type="search"
-                clearable
-              >
+              <t-input v-model="searchData.tid"
+                       class="form-item-content"
+                       placeholder="链路ID"
+                       :style="{ maxWidth: '160px' }"
+                       type="search" clearable>
                 <template #prefix-icon>
                   <SearchIcon />
                 </template>
               </t-input>
             </t-col>
             <t-col :sm="2" :span="2">
-              <t-select
-                v-model="searchData.level"
-                clearable
-                class="form-item-content"
-                :style="{ maxWidth: '160px' }"
-                placeholder="日志级别"
-              >
+
+              <t-select v-model="searchData.level" clearable class="form-item-content"
+                        :style="{ maxWidth: '160px' }"
+                        placeholder="日志级别">
                 <t-option value="INFO">INFO</t-option>
                 <t-option value="WARN">WARN</t-option>
                 <t-option value="ERROR">ERROR</t-option>
@@ -74,31 +61,29 @@
                 clearable
                 @change="rdpChange"
                 class="form-item-content"
-                :style="{ maxWidth: '250px' }"
-              />
+                :style="{ maxWidth: '250px' }"/>
             </t-col>
           </t-row>
         </t-col>
 
         <t-col :span="2" class="operation-container">
           <t-button type="reset" variant="base" theme="default"> 重置 </t-button>
-          <t-button theme="primary" type="submit" :loading="dataLoading" :style="{ marginLeft: '8px' }">
-            查询
-          </t-button>
+          <t-button theme="primary"
+                    type="submit"
+                    :loading="dataLoading"
+                    :style="{ marginLeft: '8px' }"> 查询 </t-button>
         </t-col>
       </t-row>
     </t-form>
 
-    <t-table
-      row-key="id"
-      :data="data"
-      :loading="dataLoading"
-      :pagination="pagination"
-      :expanded-row="true"
-      :expand-on-row-click="true"
-      @page-change="rehandlePageChange"
-      :columns="columns"
-    >
+    <t-table row-key="id"
+             :data="data"
+             :loading="dataLoading"
+             :pagination="pagination"
+             :expanded-row="true"
+             :expand-on-row-click="true"
+             @page-change="rehandlePageChange"
+             :columns="columns">
       <template #level="{ row }">
         <div v-if="row.level === 'INFO'">
           <t-tag theme="success">INFO</t-tag>
@@ -126,106 +111,105 @@
   </t-card>
 </template>
 
-<script lang="ts">
+<script lang="ts" >
 export default {
-  name: 'AppLogs',
-};
+  name: "AppLogs"
+}
 </script>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import dayjs from 'dayjs';
-import { request } from '@/utils/request';
-import { MessagePlugin } from 'tdesign-vue-next';
-import { SearchIcon } from 'tdesign-icons-vue-next';
+import {onMounted, ref} from "vue";
+import dayjs from "dayjs";
+import {request} from "@/utils/request";
+import {MessagePlugin} from "tdesign-vue-next";
+import {SearchIcon} from "tdesign-icons-vue-next";
 const rehandlePageChange = (curr, pageInfo) => {
-  pagination.value.pageSize = curr.pageSize;
-  pagination.value.current = curr.current;
-  getData();
-};
+  pagination.value.pageSize = curr.pageSize
+  pagination.value.current = curr.current
+  getData()
+}
 const columns = [
+
   {
     title: '时间',
     colKey: 'time',
-    ellipsis: true,
+    ellipsis: true
   },
   {
     title: '链路ID',
     colKey: 'tid',
-    ellipsis: true,
+    ellipsis: true
   },
   {
     title: '服务',
     colKey: 'sId',
-    ellipsis: true,
+    ellipsis: true
   },
   {
     title: '服务ID',
     colKey: 'iId',
-    ellipsis: true,
+    ellipsis: true
   },
   {
     title: '等级',
     colKey: 'level',
-    ellipsis: true,
-  },
-];
-const data = ref([]);
-const timeRange = ref([]);
+    ellipsis: true
+  }
+]
+const data = ref([])
+const timeRange = ref([])
 const searchData = ref({
   level: '',
   sId: '',
   iId: '',
   message: '',
   tid: '',
-});
-const reset = () => {
+})
+const reset = ()=>{
   // searchData.value.username = ''
   // searchData.value.startTime = ''
   // searchData.value.endTime = ''
-  timeRange.value = [];
-};
+  timeRange.value = []
+}
 const pagination = ref({
   pageSize: 10,
   total: 100,
   current: 1,
 });
-const dataLoading = ref(false);
-const getData = () => {
-  console.log({ ...searchData.value });
-  dataLoading.value = true;
+const dataLoading = ref(false)
+const getData = ()=>{
+  console.log({...searchData.value})
+  dataLoading.value = true
   //@ts-ignore
-  request
-    .get({
-      url: '/v1/system/api/web/getAppLogs',
-      params: {
-        ...searchData.value,
-        size: pagination.value.pageSize,
-        page: pagination.value.current,
-      },
-    })
-    .then((res) => {
-      dataLoading.value = false;
-      data.value = res.list;
-      pagination.value.total = res.total;
-    })
-    .catch((err) => {
-      dataLoading.value = false;
-      MessagePlugin.error(err.message);
-    });
-};
-onMounted(() => {
-  getData();
-});
-const rdpChange = (val) => {
-  searchData.value.startTime = val[0] === undefined ? '' : val[0];
-  searchData.value.endTime = val[1] === undefined ? '' : val[1];
-};
+  request.get({
+    url: '/v1/system/api/web/getAppLogs',
+    params: {
+      ...searchData.value,
+      size: pagination.value.pageSize,
+      page: pagination.value.current
+    }
+  }).then(res=>{
+    dataLoading.value = false
+    data.value = res.list
+    pagination.value.total = res.total
+  }).catch(err=>{
+    dataLoading.value = false
+    MessagePlugin.error(err.message)
+  })
+}
+onMounted(()=>{
+  getData()
+})
+const rdpChange = (val)=>{
+  searchData.value.startTime = val[0] === undefined ? '' : val[0]
+  searchData.value.endTime = val[1] === undefined ? '' : val[1]
+}
 const presets = ref({
-  最近7天: [dayjs().subtract(6, 'day'), dayjs()],
-  最近3天: [dayjs().subtract(2, 'day'), dayjs()],
-  今天: [dayjs(), dayjs()],
+  "最近7天": [dayjs().subtract(6, 'day'), dayjs()],
+  "最近3天": [dayjs().subtract(2, 'day'), dayjs()],
+  "今天": [dayjs(), dayjs()],
 });
+
 </script>
 
 <style lang="less" scoped>
@@ -282,7 +266,7 @@ const presets = ref({
     width: 120px;
   }
 }
-.content {
+.content{
   width: 100%;
   word-break: break-all;
 }

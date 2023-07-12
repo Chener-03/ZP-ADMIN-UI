@@ -80,12 +80,12 @@ export const useSettingStore = defineStore('setting', {
     },
     resetConfig() {
       this.updateConfig(state);
-    },
+    }
   },
-  /*  persist: {
+/*  persist: {
     paths: [...keys(STYLE_CONFIG), 'colorList', 'chartColors'],
   },*/
-  persist: false,
+  persist:false
 });
 
 export function getSettingStore() {

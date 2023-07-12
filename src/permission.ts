@@ -6,6 +6,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { getPermissionStore, getUserStore } from '@/store';
 import router from '@/router';
 import { PAGE_NOT_FOUND_ROUTE } from '@/utils/route/constant';
+import {TOKEN_NAME} from "@/config/global";
 
 NProgress.configure({ showSpinner: false });
 
@@ -17,6 +18,7 @@ router.beforeEach(async (to, from, next) => {
 
   const userStore = getUserStore();
   const { token } = userStore;
+
   if (token) {
     if (to.path === '/login') {
       next();

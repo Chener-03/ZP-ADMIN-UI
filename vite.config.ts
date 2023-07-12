@@ -12,6 +12,7 @@ const CWD = process.cwd();
 export default ({ mode }: ConfigEnv): UserConfig => {
   const { VITE_BASE_URL } = loadEnv(mode, CWD);
   return {
+    // base: 'http://cdn.chener.xyz/zpadmin/',
     base: VITE_BASE_URL,
     resolve: {
       alias: {

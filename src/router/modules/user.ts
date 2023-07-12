@@ -7,7 +7,7 @@ export default [
     path: '/loginRedirect',
     name: 'loginRedirect',
     redirect: '/login',
-    meta: { title: '登录页', icon: shallowRef(LogoutIcon), hidden: true },
+    meta: { title: '登录页', icon: shallowRef(LogoutIcon),hidden:true },
     component: () => import('@/layouts/blank.vue'),
     children: [
       {

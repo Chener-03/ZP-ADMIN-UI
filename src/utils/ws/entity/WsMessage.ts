@@ -1,16 +1,19 @@
-export class WsMessage {
-  public code: number;
 
-  public jwt: string;
+export class WsMessage{
+  public code : number;
 
-  public username: string;
+  public jwt : string;
 
-  public message: string;
+  public username : string;
+
+  public message : string;
+
 }
 
-export class NotifyMessage {
-  public type: string;
-  public user: string;
-  public title: string;
-  public content: string;
+
+export class NotifyMessage{
+  public type : string;
+  public user : string;
+  public title : string;
+  public content : string;
 }

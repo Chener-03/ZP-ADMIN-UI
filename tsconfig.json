@@ -13,6 +13,7 @@
     "types": ["vite/client"],
     "noEmit": true,
     "baseUrl": "./",
+    "allowJs": true,
     "paths": {
       "@/*": ["src/*"]
     }

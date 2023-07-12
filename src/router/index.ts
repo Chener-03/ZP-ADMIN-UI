@@ -63,6 +63,7 @@ export const getActive = (maxLevel = 3): string => {
   if (!route.path) {
     return '';
   }
+
   return route.path
     .split('/')
     .filter((_item: string, index: number) => index <= maxLevel && index > 0)

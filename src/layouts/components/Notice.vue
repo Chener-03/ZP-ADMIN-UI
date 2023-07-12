@@ -3,25 +3,21 @@
     <template #content>
       <div class="header-msg">
         <div class="header-msg-top">
-          <t-link theme="default" @click="goDetail">
+          <t-link theme="default" @click="goDetail" >
             <link-icon slot="prefix-icon"></link-icon>
             <p style="font-size: 16px">未读消息</p>
           </t-link>
 
-          <t-button
-            v-if="unReadMsg !== undefined && unReadMsg.length > 0"
-            class="clear-btn"
-            variant="text"
-            theme="primary"
-            @click="setRead"
-            >全部清空</t-button
-          >
+          <t-button v-if="unReadMsg!==undefined && unReadMsg.length > 0"
+                    class="clear-btn"
+                    variant="text" theme="primary"
+                    @click="setRead" >全部清空</t-button>
         </div>
-        <t-list v-if="unReadMsg !== undefined && unReadMsg.length > 0" class="narrow-scrollbar" :split="true">
+        <t-list v-if="unReadMsg!==undefined && unReadMsg.length > 0" class="narrow-scrollbar" :split="true">
           <t-list-item v-for="(item, index) in unReadMsg" :key="index">
             <div>
               <p class="msg-content">{{ item.title }}</p>
-              <p class="msg-type">{{ item.imp === '0' ? '普通' : item.imp === '1' ? '重要' : '非常重要' }}</p>
+              <p class="msg-type">{{ item.imp==='0'?'普通':item.imp==='1'?'重要':'非常重要' }}</p>
             </div>
             <p class="msg-time">{{ item.createTime }}</p>
             <template #action>
@@ -36,7 +32,7 @@
         </div>
         <div class="header-msg-bottom">
           <t-button
-            v-if="unReadMsg !== undefined && unReadMsg.length > 0"
+            v-if="unReadMsg!==undefined && unReadMsg.length > 0"
             class="header-msg-bottom-link"
             variant="text"
             theme="primary"
@@ -46,7 +42,7 @@
         </div>
       </div>
     </template>
-    <t-badge :count="unReadMsg !== undefined && unReadMsg.length" :offset="[12, 8]">
+    <t-badge :count="unReadMsg!==undefined && unReadMsg.length" :offset="[12, 8]">
       <t-button theme="default" shape="square" variant="text">
         <t-icon name="mail" />
       </t-button>
@@ -65,8 +61,8 @@ const store = useNotificationStore();
 const { unReadMsg } = storeToRefs(store);
 
 import { LinkIcon, JumpIcon } from 'tdesign-icons-vue-next';
-import { onMounted, ref } from 'vue';
-import { request } from '@/utils/request';
+import {onMounted, ref} from "vue";
+import {request} from "@/utils/request";
 //const unReadMsg = ref([]);
 const setRead = () => {
   for (let item of unReadMsg.value) {
@@ -76,27 +72,27 @@ const setRead = () => {
       params: {
         messageId: item.id,
         isReceive: true,
-        queryFields: 'id',
-      },
-    });
+        queryFields:'id'
+      }
+    })
   }
-  store.requestMsgData();
+  store.requestMsgData()
 };
 const jmpToLookUp = (id: number) => {
   router.push({
     path: '/user/messages/lookupMessage',
     query: {
-      id: id,
-    },
+      id: id
+    }
   });
-};
+}
 const goDetail = () => {
   router.push('/user/messages');
 };
 onMounted(async () => {
-  await store.requestMsgData();
+  await store.requestMsgData()
   //unReadMsg.value = store.unReadMsg
-});
+})
 </script>
 
 <style lang="less" scoped>

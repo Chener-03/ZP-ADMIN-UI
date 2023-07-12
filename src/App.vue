@@ -1,6 +1,6 @@
 <template>
   <router-view :class="[mode]" />
-  <!--  <router-view :class="[mode]" :key="$route.fullPath"/>-->
+<!--  <router-view :class="[mode]" :key="$route.fullPath"/>-->
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
