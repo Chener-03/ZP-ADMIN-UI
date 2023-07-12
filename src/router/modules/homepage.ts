@@ -1,4 +1,4 @@
-import { DashboardIcon, HomeIcon } from 'tdesign-icons-vue-next';
+import {DashboardIcon, HomeIcon} from 'tdesign-icons-vue-next';
 import { shallowRef } from 'vue';
 import Layout from '@/layouts/index.vue';
 
@@ -21,10 +21,12 @@ export default [
         meta: {
           title: '概览',
         },
-      },
+      }
     ],
   },
 ];
+
+
 
 /* old json
    {

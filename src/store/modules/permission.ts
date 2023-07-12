@@ -1,11 +1,11 @@
-import { defineStore } from 'pinia';
-import { RouteRecordRaw } from 'vue-router';
-import router, { fixedRouterList, homepageRouterList } from '@/router';
-import { store } from '@/store';
-import { RouteItem } from '@/api/model/permissionModel';
-import { getMenuList } from '@/api/permission';
-import { transformObjectToRoute } from '@/utils/route';
-import { MessagePlugin } from 'tdesign-vue-next';
+import {defineStore} from 'pinia';
+import {RouteRecordRaw} from 'vue-router';
+import router, {fixedRouterList, homepageRouterList} from '@/router';
+import {store} from '@/store';
+import {RouteItem} from '@/api/model/permissionModel';
+import {getMenuList} from '@/api/permission';
+import {transformObjectToRoute} from '@/utils/route';
+import {MessagePlugin} from "tdesign-vue-next";
 
 export const usePermissionStore = defineStore('permission', {
   state: () => ({
@@ -28,13 +28,13 @@ export const usePermissionStore = defineStore('permission', {
     async buildAsyncRoutes() {
       try {
         // 发起菜单权限请求 获取菜单列表
-        let routeItems: Array<RouteItem> = await getMenuList();
+        let routeItems : Array<RouteItem>  = await getMenuList();
         this.asyncRoutes = transformObjectToRoute(routeItems);
         await this.initRoutes();
         return this.asyncRoutes;
       } catch (error) {
-        router.push('/login');
-        MessagePlugin.error('获取菜单失败');
+        router.push('/login')
+        MessagePlugin.error('获取菜单失败')
         throw new Error("Can't build routes");
       }
     },
@@ -45,7 +45,7 @@ export const usePermissionStore = defineStore('permission', {
     },
     async clearRoutes() {
       this.asyncRoutes = [];
-    },
+    }
   },
 });
 

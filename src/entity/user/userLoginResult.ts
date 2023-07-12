@@ -1,10 +1,12 @@
-export interface UserLoginResult {
-  success: boolean;
 
-  token: string;
 
-  message: string;
+export interface UserLoginResult{
+ success:boolean;
 
-  lastLoginTime: string;
-  lastLoginIp: string;
+ token:string;
+
+ message:string;
+
+ lastLoginTime:string;
+ lastLoginIp:string;
 }

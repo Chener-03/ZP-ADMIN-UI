@@ -1,9 +1,10 @@
+
 export function ToMd5Hex(text) {
   var hexcase = 0;
   var chrsz = 8;
 
   function core_md5(x, len) {
-    x[len >> 5] |= 0x80 << len % 32;
+    x[len >> 5] |= 0x80 << ((len) % 32);
     x[(((len + 64) >>> 9) << 4) + 14] = len;
     var a = 1732584193;
     var b = -271733879;
@@ -91,11 +92,11 @@ export function ToMd5Hex(text) {
   }
 
   function md5_ff(a, b, c, d, x, s, t) {
-    return md5_cmn((b & c) | (~b & d), a, b, x, s, t);
+    return md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
   }
 
   function md5_gg(a, b, c, d, x, s, t) {
-    return md5_cmn((b & d) | (c & ~d), a, b, x, s, t);
+    return md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
   }
 
   function md5_hh(a, b, c, d, x, s, t) {
@@ -103,13 +104,13 @@ export function ToMd5Hex(text) {
   }
 
   function md5_ii(a, b, c, d, x, s, t) {
-    return md5_cmn(c ^ (b | ~d), a, b, x, s, t);
+    return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
   }
 
   function safe_add(x, y) {
-    var lsw = (x & 0xffff) + (y & 0xffff);
+    var lsw = (x & 0xFFFF) + (y & 0xFFFF);
     var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-    return (msw << 16) | (lsw & 0xffff);
+    return (msw << 16) | (lsw & 0xFFFF);
   }
 
   function bit_rol(num, cnt) {
@@ -119,20 +120,23 @@ export function ToMd5Hex(text) {
   function str2binl(str) {
     var bin = Array();
     var mask = (1 << chrsz) - 1;
-    for (var i = 0; i < str.length * chrsz; i += chrsz) bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << i % 32;
+    for (var i = 0; i < str.length * chrsz; i += chrsz)
+      bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (i % 32);
     return bin;
   }
 
   function binl2hex(binarray) {
-    var hex_tab = hexcase ? '0123456789ABCDEF' : '0123456789abcdef';
-    var str = '';
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var str = "";
     for (var i = 0; i < binarray.length * 4; i++) {
-      str +=
-        hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8 + 4)) & 0xf) +
-        hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8)) & 0xf);
+      str += hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8 + 4)) & 0xF) +
+        hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8)) & 0xF);
     }
     return str;
   }
 
   return binl2hex(core_md5(str2binl(text), text.length * chrsz));
 }
+
+
+

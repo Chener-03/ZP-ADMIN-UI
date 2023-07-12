@@ -1,9 +1,9 @@
 <template>
-  <router-view v-if="!isRefreshing" v-slot="{ Component }">
+  <router-view v-if="!isRefreshing" v-slot="{ Component }"  >
     <transition name="fade" mode="out-in">
-      <!--      <keep-alive :include="aliveViews">-->
-      <component :is="Component" />
-      <!--      </keep-alive>-->
+<!--      <keep-alive :include="aliveViews">-->
+        <component :is="Component" />
+<!--      </keep-alive>-->
     </transition>
   </router-view>
   <frame-page />

@@ -3,9 +3,9 @@
     <t-menu :class="menuCls" :theme="theme" :value="active" :collapsed="collapsed" :default-expanded="defaultExpanded">
       <template #logo>
         <span v-if="showLogo" :class="`${prefix}-side-nav-logo-wrapper`" @click="goHome">
-          <!--          <component :is="getLogo()" :class="`${prefix}-side-nav-logo-${collapsed ? 't' : 'tdesign'}-logo`" />-->
+<!--          <component :is="getLogo()" :class="`${prefix}-side-nav-logo-${collapsed ? 't' : 'tdesign'}-logo`" />-->
           <XyzTransitionGroup xyz="duration-6 short-100% wide-25%">
-            <img src="@/assets/zplogofull.png" v-if="!collapsed" style="height: 50px; width: 220px" />
+            <img src="@/assets/zplogofull.png" v-if="!collapsed" style="height: 50px;width: 220px"/>
           </XyzTransitionGroup>
         </span>
       </template>
@@ -29,6 +29,7 @@ import { prefix } from '@/config/global';
 import pgk from '../../../package.json';
 import type { MenuRoute } from '@/types/interface';
 import { getActive, getRoutesExpanded } from '@/router';
+
 
 import MenuContent from './MenuContent.vue';
 
@@ -118,6 +119,8 @@ onMounted(() => {
 const goHome = () => {
   router.push('/home/base');
 };
+
+
 </script>
 
 <style lang="less" scoped></style>

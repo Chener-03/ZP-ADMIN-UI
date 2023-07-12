@@ -13,4 +13,5 @@ export class UserBase {
   public lastLoginTime: string;
 
   public roleId: number;
+
 }

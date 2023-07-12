@@ -8,8 +8,8 @@ import proxy from '@/config/proxy';
 import { joinTimestamp, formatRequestDate, setObjToUrlParams } from './utils';
 import { TOKEN_NAME } from '@/config/global';
 import { ContentTypeEnum } from '@/entity/constants';
-import router from '@/router';
-import { MessagePlugin } from 'tdesign-vue-next';
+import router from "@/router";
+import {MessagePlugin} from "tdesign-vue-next";
 
 const env = import.meta.env.MODE || 'development';
 
@@ -55,13 +55,14 @@ const transform: AxiosTransform = {
     }
 
     // 处理401未登录
-    if (code === 401) {
+    if (code === 401)
+    {
       MessagePlugin.error(message);
       router.push({
         path: '/login',
         query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
       });
-      return;
+      return
     }
 
     throw new Error(`请求错误: ${code}:${message}`);

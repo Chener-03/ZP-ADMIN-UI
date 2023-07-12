@@ -11,5 +11,5 @@ export default [
         ...Mock.mock({}),
       },
     }),
-  },
+  }
 ] as MockMethod[];

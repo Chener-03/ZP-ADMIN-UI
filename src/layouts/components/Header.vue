@@ -4,7 +4,8 @@
       <template #logo>
         <span v-if="showLogo" class="header-logo-container" @click="handleNav('/home/base')">
           <XyzTransitionGroup xyz="duration-6 short-100% wide-25%">
-            <img src="@/assets/zplogofull.png" v-if="showLogo" style="margin-top: -11px; height: 50px; width: 220px" />
+            <img src="@/assets/zplogofull.png" v-if="showLogo"
+                 style="margin-top: -11px;height: 50px;width: 220px"/>
           </XyzTransitionGroup>
         </span>
         <div v-else class="header-operate-left">
@@ -50,7 +51,7 @@
               <template #icon>
                 <t-icon class="header-user-avatar" name="user-circle" />
               </template>
-              <div class="header-user-account">{{ user.userInfo.userBase.username }}</div>
+              <div class="header-user-account">{{user.userInfo.userBase.username}}</div>
               <template #suffix><t-icon name="chevron-down" /></template>
             </t-button>
           </t-dropdown>
@@ -69,7 +70,7 @@
 import { computed } from 'vue';
 import type { PropType } from 'vue';
 import { useRouter } from 'vue-router';
-import { getUserStore, useSettingStore } from '@/store';
+import {getUserStore, useSettingStore} from '@/store';
 import { getActive } from '@/router';
 import { prefix } from '@/config/global';
 import type { MenuRoute } from '@/types/interface';
@@ -156,7 +157,6 @@ const handleLogout = () => {
 const navToGitHub = () => {
   window.open('https://github.com/chener999/ZP-ADMIN');
 };
-
 const navToHelper = () => {
   window.open('http://zpdoc.chener.xyz');
 };
