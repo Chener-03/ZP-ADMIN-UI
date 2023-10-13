@@ -2,14 +2,16 @@
 // @ts-nocheck
 import isString from 'lodash/isString';
 import merge from 'lodash/merge';
-import type { AxiosTransform, CreateAxiosOptions } from './AxiosTransform';
-import { VAxios } from './Axios';
+import type {AxiosTransform, CreateAxiosOptions} from './AxiosTransform';
+import {VAxios} from './Axios';
 import proxy from '@/config/proxy';
-import { joinTimestamp, formatRequestDate, setObjToUrlParams } from './utils';
-import { TOKEN_NAME } from '@/config/global';
-import { ContentTypeEnum } from '@/entity/constants';
+import {formatRequestDate, joinTimestamp, setObjToUrlParams} from './utils';
+import {FA_HEADER_KEY, HUMAN_VERIFY_HEADER_KEY, TOKEN_NAME} from '@/config/global';
+import {ContentTypeEnum} from '@/entity/constants';
 import router from "@/router";
 import {MessagePlugin} from "tdesign-vue-next";
+import CreateDialog from "@/components/public/VerifyCodeBoxDialog";
+import {getVerificationCode} from "@/utils/HumanVerification";
 
 const env = import.meta.env.MODE || 'development';
 
@@ -19,7 +21,7 @@ const host = env === 'mock' || !proxy.isRequestProxy ? '' : proxy[env].host;
 // 数据处理，方便区分多种处理方式
 const transform: AxiosTransform = {
   // 处理请求数据。如果数据不是预期格式，可直接抛出错误
-  transformRequestHook: (res, options) => {
+  transformRequestHook: async (res, options) => {
     const { isTransformResponse, isReturnNativeResponse } = options;
 
     // 如果204无内容直接返回
@@ -65,12 +67,39 @@ const transform: AxiosTransform = {
       return
     }
 
+    // 处理2fa令牌请求
+    if (code === 451){
+      if (!res.config.isFirstReuqest2Fa){
+        res.config.isFirstReuqest2Fa = true
+
+        let nextUrl = res.config.url.substring(res.config.url.indexOf(host)+host.length)
+        if (!nextUrl.startsWith('/')){
+          nextUrl = `/${nextUrl}`
+        }
+        res.config.url = nextUrl;
+        res.config.headers = {...res.config.headers}
+        let a = await CreateDialog('', {title: ''})
+        if(a !== null && a.length !== 0){
+          res.config.headers[FA_HEADER_KEY] = a;
+          // 如果有人机验证头，则重新签发人机验证令牌
+          if (res.config.headers[HUMAN_VERIFY_HEADER_KEY]){
+            res.config.headers[HUMAN_VERIFY_HEADER_KEY] = await getVerificationCode();
+          }
+          try {
+            return await request.post(res.config);
+          }catch (err){
+            throw err;
+          }
+        }
+      }
+    }
+
     throw new Error(`请求错误: ${code}:${message}`);
   },
 
   // 请求前处理配置
-  beforeRequestHook: (config, options) => {
-    const { apiUrl, isJoinPrefix, urlPrefix, joinParamsToUrl, formatDate, joinTime = true } = options;
+  beforeRequestHook: async (config, options) => {
+    const { apiUrl, isJoinPrefix, urlPrefix, joinParamsToUrl, formatDate, joinTime = true} = options;
 
     // 添加接口前缀
     if (isJoinPrefix && urlPrefix && isString(urlPrefix)) {
@@ -81,6 +110,7 @@ const transform: AxiosTransform = {
     if (apiUrl && isString(apiUrl)) {
       config.url = `${apiUrl}${config.url}`;
     }
+
     const params = config.params || {};
     const data = config.data || false;
 
@@ -124,7 +154,8 @@ const transform: AxiosTransform = {
   },
 
   // 请求拦截器处理
-  requestInterceptors: (config, options) => {
+  requestInterceptors: async (config, options) => {
+
     // 请求之前处理config
     const token = localStorage.getItem(TOKEN_NAME);
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
@@ -133,16 +164,26 @@ const transform: AxiosTransform = {
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
+
+    const { requestOptions } = config;
+
+    // 需要人机验证则加入头部验证结果
+    if (requestOptions.withHumanVerifyCode){
+      config.headers[HUMAN_VERIFY_HEADER_KEY] = await getVerificationCode();
+    }
+
     return config;
   },
 
   // 响应拦截器处理
   responseInterceptors: (res) => {
+
     return res;
   },
 
   // 响应错误处理
   responseInterceptorsCatch: (error: any) => {
+
     const { config } = error;
     if (!config || !config.requestOptions.retry) return Promise.reject(error);
 
@@ -157,7 +198,8 @@ const transform: AxiosTransform = {
         resolve(config);
       }, config.requestOptions.retry.delay || 1);
     });
-    config.headers = { ...config.headers, 'Content-Type': ContentTypeEnum.Json };
+    config.headers = { ...config.headers};
+    // config.headers = { ...config.headers, 'Content-Type': ContentTypeEnum.Json };
     return backoff.then((config) => request.request(config));
   },
 };
@@ -201,9 +243,10 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           ignoreRepeatRequest: true,
           // 是否携带token
           withToken: true,
+          // 是否携带人机验证
+          withHumanVerifyCode: false,
           // 重试
           retry: {
-            // 重试请求表单会变成json 待解决
             count: 0,
             delay: 1000,
           },

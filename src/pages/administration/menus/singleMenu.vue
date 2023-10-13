@@ -3,7 +3,7 @@
   <div v-if="node.id === null" style="text-align: center">
     <MenuNotChangeIcon style="height: calc(60vh);width: calc(60vh);"></MenuNotChangeIcon>
     <div>
-      <span>请选择右侧</span>
+<!--      <span>请选择右侧</span>-->
     </div>
   </div>
   <div v-else style="margin: 20px">

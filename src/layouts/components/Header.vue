@@ -162,6 +162,7 @@ const navToHelper = () => {
 };
 </script>
 <style lang="less" scoped>
+
 .@{starter-prefix}-header {
   &-menu-fixed {
     position: fixed;

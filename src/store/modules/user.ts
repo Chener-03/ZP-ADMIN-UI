@@ -47,7 +47,7 @@ export const useUserStore = defineStore('user', {
         let loginRes = await request.post<UserLoginResult>({
           data: userInfo,
           url: '/v1/user/api/web/userDoLogin',
-        })
+        },{withHumanVerifyCode:true,withToken:false})
         return {
           ...loginRes
         };

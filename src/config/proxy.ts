@@ -4,6 +4,7 @@ export default {
     host: 'http://localhost:5001',
     // host: 'http://chener.xyz:5001',
     cdn: '',
+    // wshost: 'ws://chener.xyz:5001/v1/user/ws/web/connect'
     wshost: 'ws://localhost:5001/v1/user/ws/web/connect'
   },
   test: {

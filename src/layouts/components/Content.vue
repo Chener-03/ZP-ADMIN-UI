@@ -1,18 +1,28 @@
 <template>
-  <router-view v-if="!isRefreshing" v-slot="{ Component }"  >
-    <transition name="fade" mode="out-in">
-<!--      <keep-alive :include="aliveViews">-->
+
+  <t-watermark :alpha="setting.showWatemark?1:0"
+               :watermark-content="{ text: concurrentUser.userInfo.userBase.username }"
+               style="height: auto"
+               :y="120" :x="120" :width="120" :height="60" >
+    <router-view v-if="!isRefreshing" v-slot="{ Component }"  >
+
+      <transition name="page-transition" mode="out-in">
+        <!--      <keep-alive :include="aliveViews">-->
         <component :is="Component" />
-<!--      </keep-alive>-->
-    </transition>
-  </router-view>
+        <!--      </keep-alive>-->
+      </transition>
+    </router-view>
+  </t-watermark>
+
+
+
   <frame-page />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ComputedRef } from 'vue';
-import { useTabsRouterStore } from '@/store';
+import {useSettingStore, useTabsRouterStore, useUserStore} from '@/store';
 import FramePage from '@/layouts/frame/index.vue';
 
 // <suspense>标签属于实验性功能，请谨慎使用
@@ -27,6 +37,11 @@ import FramePage from '@/layouts/frame/index.vue';
 //   return router.currentRoute.value.fullPath;
 // });
 
+const setting = useSettingStore();
+
+const concurrentUser = useUserStore()
+
+
 const aliveViews = computed(() => {
   const tabsRouterStore = useTabsRouterStore();
   const { tabRouters } = tabsRouterStore;
@@ -40,13 +55,49 @@ const isRefreshing = computed(() => {
   return refreshing;
 });
 </script>
+
 <style lang="less" scoped>
-.fade-leave-active,
-.fade-enter-active {
-  transition: opacity @anim-duration-slow @anim-time-fn-easing;
+
+@keyframes slideIn {
+  0% {
+    scale: (0.8);
+    transform: translateX(100%);
+  }
+
+  50%{
+    scale: (0.8);
+    transform: translateX(0%);
+  }
+
+  100% {
+    scale: (1.0);
+    transform: translateX(0);
+  }
 }
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+
+@keyframes slideOut {
+  0% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
+
+
+
+.page-transition-enter-active {
+  animation: slideIn 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+
+
+
+.page-transition-leave-active {
+  animation: slideOut 0.3s   forwards;
+}
+
+
 </style>

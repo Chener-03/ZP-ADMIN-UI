@@ -70,6 +70,7 @@ export class VAxios {
       const ignoreRepeat = ignoreRepeatRequest ?? this.options.requestOptions?.ignoreRepeatRequest;
       if (!ignoreRepeat) axiosCanceler.addPending(config);
 
+
       if (requestInterceptors && isFunction(requestInterceptors)) {
         config = requestInterceptors(config, this.options);
       }
@@ -147,8 +148,9 @@ export class VAxios {
 
     const { beforeRequestHook, requestCatchHook, transformRequestHook } = transform || {};
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
-      conf = beforeRequestHook(conf, opt);
+      conf = await beforeRequestHook(conf, opt);
     }
+
     conf.requestOptions = opt;
 
     conf = this.supportFormData(conf);
@@ -156,10 +158,10 @@ export class VAxios {
     return new Promise((resolve, reject) => {
       this.instance
         .request<any, AxiosResponse<Result>>(!config.retryCount ? conf : config)
-        .then((res: AxiosResponse<Result>) => {
+        .then(async (res: AxiosResponse<Result>) => {
           if (transformRequestHook && isFunction(transformRequestHook)) {
             try {
-              const ret = transformRequestHook(res, opt);
+              const ret = await transformRequestHook(res, opt);
               resolve(ret);
             } catch (err) {
               reject(err || new Error('请求错误!'));

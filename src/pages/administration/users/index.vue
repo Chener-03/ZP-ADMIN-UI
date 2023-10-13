@@ -4,7 +4,7 @@
   <t-card :bordered="false">
     <t-row :gutter="0">
       <t-col :span="3">
-        <t-button theme="primary" @click="()=>{resetDialogFormData();dialogVisible = true;}">新增</t-button>
+        <t-button theme="success" @click="()=>{resetDialogFormData();dialogVisible = true;}">新增</t-button>
       </t-col>
       <t-col :span="9">
         <t-form
@@ -24,7 +24,8 @@
                      clearable placeholder="别名"></t-input>
           </t-form-item>
           <t-form-item label="" style="min-width: 0;margin-right: 0">
-            <t-button theme="success" type="submit">查询</t-button>
+            <t-button theme="primary" type="submit">查询</t-button>
+            <t-button theme="primary" @click="onlineUserListShow = true">获取在线用户</t-button>
           </t-form-item>
         </t-form>
       </t-col>
@@ -43,7 +44,7 @@
       </template>
 
       <template #avatarId="{row}">
-        <t-avatar :image="host+'/v1/file/api/web/getFilePublic?resourceUid='+row.avatarId"
+        <t-avatar :image="host+'/v2/file/api/web/storage-v2/redirect/file?uid='+row.avatarId"
                   :alt="'加载失败'"  :hide-on-load-failed="true" size="large"></t-avatar>
       </template>
 
@@ -149,7 +150,7 @@
         </div>
         <div class="info-item">
           <h1>头像:</h1>
-          <span><t-avatar :image="host+'/v1/file/api/web/getFilePublic?resourceUid='+detailInformationData.avatarId"
+          <span><t-avatar :image="host+'/v2/file/api/web/storage-v2/redirect/file?uid='+detailInformationData.avatarId"
                           :hide-on-load-failed="true" size="small" shape="round"></t-avatar></span>
         </div>
         <div class="info-item">
@@ -246,6 +247,18 @@
 
   </t-dialog>
 
+
+  <t-drawer
+    destroyOnClose
+    showOverlay
+    :cancel-btn="null"
+    :confirm-btn="null"
+    :close-btn="true"
+    size="70%"
+    sizeDraggable  v-model:visible="onlineUserListShow" header="在线用户">
+    <OnlineUserList></OnlineUserList>
+  </t-drawer>
+
 </div>
 </template>
 
@@ -263,6 +276,7 @@ import {MessagePlugin} from "tdesign-vue-next";
 import proxy from "@/config/proxy";
 import {IconFont} from "tdesign-icons-vue-next";
 import {getUserStore, useUserStore} from "@/store";
+import OnlineUserList from "@/pages/administration/users/OnlineUserList.vue";
 
 const env = import.meta.env.MODE || 'development';
 const host = env === 'mock' || !proxy.isRequestProxy ? '' : proxy[env].host;
@@ -468,7 +482,7 @@ const resetPassword = (data:any,ispwd:boolean)=>{
   })
 }
 
-const onDropListClick = (a,b,c)=>{
+const onDropListClick = (a,b)=>{
   switch (a.value)
   {
     case 1:{
@@ -521,7 +535,6 @@ const disableClicked = (row)=>{
       }
     }
   }).catch(err=>{
-    console.log(err)
     if (row.disable === 1) {
       row.disable = 0
     }else {
@@ -596,6 +609,9 @@ const columns = [
     fixed: 'right',
   }
 ]
+
+
+const onlineUserListShow = ref(false)
 
 </script>
 

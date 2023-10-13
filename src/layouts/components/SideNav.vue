@@ -4,9 +4,12 @@
       <template #logo>
         <span v-if="showLogo" :class="`${prefix}-side-nav-logo-wrapper`" @click="goHome">
 <!--          <component :is="getLogo()" :class="`${prefix}-side-nav-logo-${collapsed ? 't' : 'tdesign'}-logo`" />-->
-          <XyzTransitionGroup xyz="duration-6 short-100% wide-25%">
+<!--          <XyzTransitionGroup xyz="duration-6 short-100% wide-25%">
             <img src="@/assets/zplogofull.png" v-if="!collapsed" style="height: 50px;width: 220px"/>
-          </XyzTransitionGroup>
+          </XyzTransitionGroup>-->
+          <transition name="show-hide" mode="out-in">
+            <img src="@/assets/zplogofull.png" v-if="!collapsed" style="height: 50px;width: 220px"/>
+          </transition>
         </span>
       </template>
       <menu-content :nav-data="menu" />
@@ -123,4 +126,37 @@ const goHome = () => {
 
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+/* 定义过渡动画的开始状态 */
+.show-hide-enter-from {
+  opacity: 0;
+  max-width: 20%;
+}
+
+/* 定义过渡动画的结束状态 */
+.show-hide-enter-to {
+  opacity: 1;
+  max-width: 100%;
+}
+
+/* 定义过渡动画的开始状态 */
+.show-hide-leave-from {
+  opacity: 1;
+  max-width: 100%;
+}
+
+/* 定义过渡动画的结束状态 */
+.show-hide-leave-to {
+  opacity: 0;
+  max-width: 20%;
+}
+
+/* 定义过渡动画的持续时间 */
+.show-hide-enter-active,
+.show-hide-leave-active {
+  transition: opacity 0.5s, max-width 0.5s;
+}
+
+
+</style>

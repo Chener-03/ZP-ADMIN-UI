@@ -59,6 +59,11 @@
           </t-popup>
         </div>
       </template>
+
+      <template #loginType="{row}">
+        <span>{{row.loginType==='0'?'账号密码':'二维码'}}</span>
+      </template>
+
     </t-table>
   </t-card>
 </template>
@@ -103,6 +108,11 @@ const columns = [
   {
     title: '系统',
     colKey: 'os',
+    ellipsis: true
+  },
+  {
+    title: '登录方式',
+    colKey: 'loginType',
     ellipsis: true
   },
   {

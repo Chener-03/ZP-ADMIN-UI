@@ -9,14 +9,14 @@
     @close-btn-click="handleCloseDrawer"
   >
     <div class="setting-container">
-      <t-form ref="form" :data="formData" label-align="left">
+      <t-form ref="form" :data="formData" label-align="left" label-width="200px">
         <div class="setting-group-title">主题模式</div>
         <t-radio-group v-model="formData.mode">
           <div v-for="(item, index) in MODE_OPTIONS" :key="index" class="setting-layout-drawer">
             <div>
-              <t-radio-button :key="index" :value="item.type"
-                ><component :is="getModeIcon(item.type)"
-              /></t-radio-button>
+              <t-radio-button :key="index" :value="item.type" style="height: 78px;margin-right: 10px" >
+                <component :is="getModeIcon(item.type)" />
+              </t-radio-button>
               <p :style="{ textAlign: 'center', marginTop: '8px' }">{{ item.text }}</p>
             </div>
           </div>
@@ -56,7 +56,7 @@
         <div class="setting-group-title">导航布局</div>
         <t-radio-group v-model="formData.layout">
           <div v-for="(item, index) in LAYOUT_OPTION" :key="index" class="setting-layout-drawer">
-            <t-radio-button :key="index" :value="item">
+            <t-radio-button :key="index" :value="item" style="height: 78px;margin-right: 10px" >
               <thumbnail :src="getThumbnailUrl(item)" />
             </t-radio-button>
           </div>
@@ -84,6 +84,9 @@
         <t-form-item label="使用 多标签Tab页" name="isUseTabsRouter">
           <t-switch v-model="formData.isUseTabsRouter"></t-switch>
         </t-form-item>
+        <t-form-item label="显示 水印" name="showWatemark">
+          <t-switch v-model="formData.showWatemark"></t-switch>
+        </t-form-item>
       </t-form>
       <div class="setting-info">
         <t-button theme="primary" variant="text" @click="handleSave"> 保存个性化配置 </t-button>
@@ -109,8 +112,8 @@ import { insertThemeStylesheet, generateColorMap } from '@/utils/color';
 import SettingDarkIcon from '@/assets/assets-setting-dark.svg';
 import SettingLightIcon from '@/assets/assets-setting-light.svg';
 import SettingAutoIcon from '@/assets/assets-setting-auto.svg';
-import { request } from '@/utils/request';
-import { useRoute } from 'vue-router';
+import {request} from "@/utils/request";
+import {useRoute} from "vue-router";
 
 const settingStore = useSettingStore();
 
@@ -128,9 +131,9 @@ const requestUserConfig = async () => {
   //@ts-ignore
   return await request.get({
     url: '/v1/user/api/web/getConcurrentUserConfig',
-    params: {
-      queryFields: 'config_json_layout',
-    },
+    params:{
+      queryFields:'config_json_layout'
+    }
   });
 };
 
@@ -180,14 +183,14 @@ const changeColor = (hex: string) => {
 };
 
 onMounted(async () => {
-  if (route.path !== '/login') {
+  if (route.path !== '/login'){
     try {
       let json = await requestUserConfig();
-      if (json.configJsonLayout !== undefined && json.configJsonLayout !== null && json.configJsonLayout !== '') {
-        formData.value = JSON.parse(json.configJsonLayout);
+      if (json.configJsonLayout !== undefined && json.configJsonLayout !== null && json.configJsonLayout !== ''){
+        formData.value = (JSON.parse(json.configJsonLayout));
       }
-    } catch (err) {
-      console.log(err);
+    }catch (err){
+      console.log(err)
     }
   }
   document.querySelector('.dynamic-color-btn').addEventListener('click', () => {
@@ -204,23 +207,21 @@ const onPopupVisibleChange = (visible: boolean, context: PopupVisibleChangeConte
 const handleSave = () => {
   const text = JSON.stringify(formData.value, null, 4);
   //@ts-ignore
-  request
-    .post({
-      url: '/v1/user/api/web/updateConcurrentUserLayoutConfig',
-      params: {
-        layoutConfig: text,
-      },
-    })
-    .then((res) => {
-      if (res === true) {
-        MessagePlugin.success('保存成功');
-      } else {
-        MessagePlugin.error('保存失败');
-      }
-    })
-    .catch((err) => {
+  request.post({
+    url: '/v1/user/api/web/updateConcurrentUserLayoutConfig',
+    params: {
+      layoutConfig: text
+    }
+  }).then(res=>{
+    if (res === true){
+      MessagePlugin.success('保存成功');
+    }else {
       MessagePlugin.error('保存失败');
-    });
+    }
+  }).catch(err=>{
+    MessagePlugin.error('保存失败');
+  })
+
 };
 const getModeIcon = (mode: string) => {
   if (mode === 'light') {

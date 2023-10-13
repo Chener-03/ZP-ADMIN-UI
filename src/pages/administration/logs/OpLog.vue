@@ -56,7 +56,7 @@
           <t-tag theme="success">成功</t-tag>
         </div>
         <div v-else>
-          <t-popup :content="row.issuccess">
+          <t-popup :content="row.failReason">
             <t-tag theme="danger">失败</t-tag>
           </t-popup>
         </div>

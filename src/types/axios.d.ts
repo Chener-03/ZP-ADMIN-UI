@@ -11,6 +11,7 @@ export interface RequestOptions {
   ignoreRepeatRequest?: boolean;
   joinTime?: boolean;
   withToken?: boolean;
+  withHumanVerifyCode?: boolean;
   retry?: {
     count: number;
     delay: number;

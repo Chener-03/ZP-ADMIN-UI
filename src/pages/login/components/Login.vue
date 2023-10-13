@@ -5,7 +5,7 @@
     :data="formData"
     :rules="FORM_RULES"
     label-width="0"
-    @submit="onSubmitWithRecaptcha"
+    @submit="onSubmitWithRecaptchaV2"
   >
     <template v-if="type == 'password'">
       <t-form-item name="account">
@@ -76,6 +76,7 @@ import {getPermissionStore, getUserStore, UserLoginParam, useUserStore} from '@/
 import {globleWebsocketStart} from "@/utils/ws";
 import {QrCodeLogin,getSystemName} from "@/utils/ws/qrcode";
 import {TOKEN_NAME} from "@/config/global";
+import {getVerificationCode} from "@/utils/HumanVerification";
 
 const userStore = useUserStore();
 
@@ -112,34 +113,23 @@ const loginBtnText = ref('登录');
 const router = useRouter();
 const route = useRoute();
 
-const onSubmitWithRecaptcha = async ({validateResult}) => {
-  if (validateResult === true)
-  {
+
+const onSubmitWithRecaptchaV2 = async ({validateResult})=>{
+  try {
     loginBtnLoadding.value = true
-    loginBtnText.value = '人机校验中...'
-    //@ts-ignore
-    window.grecaptcha.ready(()=>{
-      //@ts-ignore
-      window.grecaptcha.execute('6LfSuiUiAAAAAM4N4hjEAnaHL6vQi1eGCRgqXvmf',{action: 'submit'})
-        .then(async (token: string) => {
-          loginBtnText.value = '登录中...'
-          recaptchaCode.value = token;
-          await permissionStore.clearRoutes();
-          await onSubmit({validateResult: true})
-          loginBtnText.value = '登录'
-        }).catch(err=>{
-          loginBtnLoadding.value = false
-          loginBtnText.value = '登录'
-          MessagePlugin.error('人机验证失败');
-      })
-    })
+    loginBtnText.value = '登录中...'
+    await permissionStore.clearRoutes();
+    await onSubmit({validateResult:validateResult});
+    loginBtnText.value = '登录'
+  }finally {
+    loginBtnLoadding.value = false
+    loginBtnText.value = '登录'
   }
-};
+}
 
 const onSubmit = async ({ validateResult }) => {
   if (validateResult === true) {
     try {
-
       let userLoginParam :UserLoginParam = {
         username: formData.value.account,
         password: formData.value.password,
@@ -168,9 +158,9 @@ const onSubmit = async ({ validateResult }) => {
     }
   }
 };
-
+const QRCODE_PREFIX = 'ZP-ADMMIN-QRCODE-LOGIN-PREFIX:';
 let qr = null;
-let qrcodeVal = ref('zpadminqrcodelogin:');
+let qrcodeVal = ref(`${QRCODE_PREFIX}`);
 let qrcodeLoading = ref(false);
 let readyTextShow = ref(false);
 let readyText = ref('准备中...');
@@ -181,7 +171,7 @@ const doqr = ()=>{
     readyText.value = '扫码成功,请确认登录';
   }
   qr.qrcodeCallBack = (data)=>{
-    qrcodeVal.value = `zpadminqrcodelogin:${data.message}`;
+    qrcodeVal.value = `${QRCODE_PREFIX}${data.message}`;
     qrcodeLoading.value = false;
   }
   qr.errorCallBack = (data)=>{
@@ -234,7 +224,7 @@ const undoqr = ()=>{
   setTimeout(() => {
     qrcodeLoading.value = false;
     readyTextShow.value = false;
-    qrcodeVal.value = 'zpadminqrcodelogin:';
+    qrcodeVal.value = `${QRCODE_PREFIX}`;
     readyText.value = '准备中...';
   }, 500);
 

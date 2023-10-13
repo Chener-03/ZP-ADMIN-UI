@@ -1,3 +1,4 @@
+import {DS_KEY} from "@/config/global";
 
 export function ToMd5Hex(text) {
   var hexcase = 0;
@@ -138,5 +139,8 @@ export function ToMd5Hex(text) {
   return binl2hex(core_md5(str2binl(text), text.length * chrsz));
 }
 
-
+export function ToMd5WithDsKey(...args : string[]){
+  let str = args.join("");
+  return ToMd5Hex(str + DS_KEY);
+}
 
